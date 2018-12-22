@@ -10,7 +10,8 @@ import Cocoa
 class ViewController: NSViewController {
 
     let defaults = UserDefaults.standard
-    
+    let ws = WebSocket()
+
     @IBOutlet weak var hubURL: NSTextField!
     @IBOutlet weak var Secret: NSTextField!
     @IBOutlet weak var topic: NSTextField!
@@ -58,33 +59,29 @@ class ViewController: NSViewController {
         postString += "&hub.channel.type=websocket"
         postString += "&hub.channel.endpoint="  + topic.stringValue
         log(msg: "Subscribing to " + hubURL.stringValue + " with events: " + eventList)
-        var responseString = ""
         request.httpBody = postString.data(using: .utf8)
-        let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
-            guard let data = data, error == nil else {
-                // check for fundamental networking error
-                print("error = \(String(describing: error))")
-                return
+        let semaphore = DispatchSemaphore(value: 0)
+        let task = session.dataTask(with: request as URLRequest, completionHandler:
+            {
+                data, response, error in guard let data = data, error == nil else
+                {
+                    print("error = \(String(describing: error))")
+                    return
+                }
+                print("response = \(String(describing: response))")
+                print("data = \(String(describing: data))")
+                semaphore.signal()
             }
-            //print("response = \(String(describing: response))")
-            responseString = ""
-            print(responseString)
-       //     self.log(msg: String(describing: response))
-        })
+        )
+        
         task.resume()
-        // connect websocket
+        _ = semaphore.wait(timeout: .distantFuture)
+        let hubComponents = self.hubURL.stringValue.split(separator: "/")
         var wsURL="ws"
-        if hubURL.stringValue.prefix(5) == "https" {
-            wsURL += "s" + hubURL.stringValue.suffix( hubURL.stringValue.count - 5)
-        }
-        else {
-            wsURL += hubURL.stringValue.suffix( hubURL.stringValue.count - 4)
-        }
-        if wsURL.suffix(1) == "/" {
-            wsURL += "bind/" + topic.stringValue
-        }
-        else { wsURL += "/bind/" + topic.stringValue }
-        print(wsURL)
+        if (hubComponents[0] == "https") { wsURL += "s" }
+        wsURL += "://" + hubComponents[1] + "/bind/" + self.topic.stringValue
+        log(msg: "Binding websocket: " + wsURL)
+        ws.open(wsURL)
     }
     
     override func viewDidLoad() {
@@ -109,6 +106,18 @@ class ViewController: NSViewController {
         hubURL.stringValue = defaults.string(forKey: "hubURL") ?? "http://localhost:3000/api/hub/"
         Secret.stringValue = defaults.string(forKey: "Secret") ?? "secret"
         topic.stringValue = randomString(length: 12)
+        
+        ws.event.open = {
+            print("opened")
+            //send("test")
+        }
+        ws.event.close = { code, reason, clean in
+            print("close")
+        }
+        ws.event.error = { error in
+            print("error \(error)")
+        }
+
     }
     
     @IBAction func saveSettingsClick(_ sender: Any) {

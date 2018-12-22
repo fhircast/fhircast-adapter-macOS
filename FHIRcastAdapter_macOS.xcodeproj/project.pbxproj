@@ -11,6 +11,8 @@
 		5B07224821CCE3BC00C2831A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B07224721CCE3BC00C2831A /* ViewController.swift */; };
 		5B07224A21CCE3BD00C2831A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B07224921CCE3BD00C2831A /* Assets.xcassets */; };
 		5B07224D21CCE3BD00C2831A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B07224B21CCE3BD00C2831A /* Main.storyboard */; };
+		5B40CA3321CEA447006D38FB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B40CA3221CEA447006D38FB /* libz.tbd */; };
+		5B40CA3521CEA4D4006D38FB /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B40CA3421CEA4D3006D38FB /* WebSocket.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		5B07224C21CCE3BD00C2831A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5B07224E21CCE3BD00C2831A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B07224F21CCE3BD00C2831A /* FHIRcastAdapter_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FHIRcastAdapter_macOS.entitlements; sourceTree = "<group>"; };
+		5B40CA3221CEA447006D38FB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		5B40CA3421CEA4D3006D38FB /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -28,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B40CA3321CEA447006D38FB /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +44,7 @@
 			children = (
 				5B07224421CCE3BC00C2831A /* FHIRcastAdapter_macOS */,
 				5B07224321CCE3BC00C2831A /* Products */,
+				5B40CA3121CEA447006D38FB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -53,6 +59,7 @@
 		5B07224421CCE3BC00C2831A /* FHIRcastAdapter_macOS */ = {
 			isa = PBXGroup;
 			children = (
+				5B40CA3421CEA4D3006D38FB /* WebSocket.swift */,
 				5B07224521CCE3BC00C2831A /* AppDelegate.swift */,
 				5B07224721CCE3BC00C2831A /* ViewController.swift */,
 				5B07224921CCE3BD00C2831A /* Assets.xcassets */,
@@ -61,6 +68,14 @@
 				5B07224F21CCE3BD00C2831A /* FHIRcastAdapter_macOS.entitlements */,
 			);
 			path = FHIRcastAdapter_macOS;
+			sourceTree = "<group>";
+		};
+		5B40CA3121CEA447006D38FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5B40CA3221CEA447006D38FB /* libz.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B07224821CCE3BC00C2831A /* ViewController.swift in Sources */,
+				5B40CA3521CEA4D4006D38FB /* WebSocket.swift in Sources */,
 				5B07224621CCE3BC00C2831A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

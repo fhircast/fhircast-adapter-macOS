@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FHIRcastAdapter_macOS/ViewController.swift"
-            timestampString = "567182043.4834549"
+            timestampString = "567206141.512714"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
             landmarkName = "subscribe(mode:)"
             landmarkType = "7">
          </BreakpointContent>
