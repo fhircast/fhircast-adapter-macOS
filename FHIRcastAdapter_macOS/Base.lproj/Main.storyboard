@@ -833,6 +833,18 @@
                                     <action selector="Secret:" target="XfG-lQ-9wD" id="P0M-vM-FMa"/>
                                 </connections>
                             </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9uA-Hd-TmN">
+                                <rect key="frame" x="89" y="360" width="289" height="22"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="12345" drawsBackground="YES" id="hJa-6u-Tur">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="Secret:" target="XfG-lQ-9wD" id="zmX-1e-I01"/>
+                                </connections>
+                            </textField>
                             <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFM-G4-aD9">
                                 <rect key="frame" x="13" y="13" width="729" height="252"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -840,7 +852,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="729" height="252"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView ambiguous="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="dYi-DZ-oPS">
+                                        <textView autoresizesSubviews="NO" ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="dYi-DZ-oPS">
                                             <rect key="frame" x="0.0" y="0.0" width="729" height="252"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -867,6 +879,15 @@
                                     <action selector="saveSettingsClick:" target="XfG-lQ-9wD" id="mKZ-ek-Eic"/>
                                 </connections>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3D7-Uo-r3M">
+                                <rect key="frame" x="11" y="360" width="41" height="17"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Topic:" id="W9m-KH-gtn">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="w8q-Gh-TM1" firstAttribute="baseline" secondItem="BHl-cC-vJ9" secondAttribute="baseline" id="HfS-3b-pq7"/>
@@ -883,12 +904,14 @@
                         <outlet property="close_patient_chart" destination="Wld-yl-APa" id="ylu-Kc-wZi"/>
                         <outlet property="hibernate_user" destination="iPH-s0-RgG" id="fMh-yA-Izp"/>
                         <outlet property="hubURL" destination="w8q-Gh-TM1" id="kRm-Yd-vio"/>
+                        <outlet property="logTextView" destination="dYi-DZ-oPS" id="22n-u2-2ly"/>
                         <outlet property="logView" destination="UFM-G4-aD9" id="8cA-Jr-yEe"/>
                         <outlet property="logout_user" destination="rsn-0y-KMG" id="1Zm-nm-Xiy"/>
                         <outlet property="open_imaging_study" destination="zBP-1B-zcZ" id="t9G-P7-g3K"/>
                         <outlet property="open_patient_chart" destination="t65-If-Wty" id="qQg-sI-8oO"/>
                         <outlet property="switch_imaging_study" destination="uIG-vC-Z0t" id="LZl-mc-1Ps"/>
                         <outlet property="switch_patient_chart" destination="rmS-V2-oAD" id="yo4-CL-kJB"/>
+                        <outlet property="topic" destination="9uA-Hd-TmN" id="WSi-yi-HQJ"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
