@@ -9,7 +9,17 @@
 import Cocoa
 
 class ViewController: NSViewController {
-
+    
+  
+    @IBOutlet weak var open_patient_chart: NSButton!
+    @IBOutlet weak var switch_patient_chart: NSButton!
+    @IBOutlet weak var close_patient_chart: NSButton!
+    @IBOutlet weak var open_imaging_study: NSButton!
+    @IBOutlet weak var switch_imaging_study: NSButton!
+    @IBOutlet weak var close_imaging_study: NSButton!
+    @IBOutlet weak var logout_user: NSButton!
+    @IBOutlet weak var hibernate_user: NSButton!
+    
     @IBAction func subscribeClick(_ sender: Any) {
         
         let subscribeURL = URL(string: hubURL.stringValue)!
@@ -18,26 +28,38 @@ class ViewController: NSViewController {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         var postString  = "hub.mode="+"subscribe"
-        postString += "&hub.events=open-imaging-study"
+        
+        var eventList = "";
+        if (open_patient_chart.state == .on)   { eventList += "open-patient-chart,"}
+        if (switch_patient_chart.state == .on) { eventList += "switch-patient-chart,"}
+        if (close_patient_chart.state == .on)  { eventList += "close-patient-chart,"}
+        if (open_imaging_study.state == .on)   { eventList += "open-imaging-study,"}
+        if (switch_imaging_study.state == .on) { eventList += "switch-imaging-study,"}
+        if (close_imaging_study.state == .on)  { eventList += "close-imaging-study,"}
+        if (hibernate_user.state == .on)       { eventList += "hibernate-user,"}
+        if (logout_user.state == .on)          { eventList += "logout-user,"}
+
+        postString += "&hub.events=" + eventList
         postString += "&hub.secret=secert"
         postString += "&hub.topic=12345"
         postString += "&hub.lease=999"
         postString += "&hub.channel.type=websocket"
         postString += "&hub.channel.endpoint=12345"
+
         request.httpBody = postString.data(using: .utf8)
         let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
             guard let data = data, error == nil else {                                                 // check for fundamental networking error
-                print("error = \(error)")
+                print("error = \(String(describing: error))")
                 return
             }
             
             if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                print("response = \(response)")
+                print("response = \(String(describing: response))")
             }
             
             let responseString = String(data: data, encoding: .utf8)
-            print("responseString = \(responseString)")
+            print("responseString = \(String(describing: responseString))")
         })
         
         task.resume()
