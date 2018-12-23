@@ -18,7 +18,18 @@ class ViewController: NSViewController {
     
     @IBAction func subscribeClick(_ sender: Any) { subscribe(mode: "subscribe") }
     @IBAction func unsubscribeClick(_ sender: Any) { subscribe(mode: "unsubscribe")}
-
+    @IBAction func helpClick(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/fhircast/fhircast-adapter-macOS")!)
+    }
+    
+    @IBAction func shutdownClick(_ sender: Any) { NSApplication.shared.terminate(self) }
+    
+    @IBAction func DeleteClick(_ sender: Any) {
+    }
+    
+    @IBOutlet weak var autoSubscribe: NSButton!
+    @IBOutlet weak var osirix: NSButton!
+    
     @IBOutlet weak var open_patient_chart: NSButton!
     @IBOutlet weak var switch_patient_chart: NSButton!
     @IBOutlet weak var close_patient_chart: NSButton!
@@ -73,7 +84,6 @@ class ViewController: NSViewController {
                 semaphore.signal()
             }
         )
-        
         task.resume()
         _ = semaphore.wait(timeout: .distantFuture)
         let hubComponents = self.hubURL.stringValue.split(separator: "/")
@@ -107,17 +117,17 @@ class ViewController: NSViewController {
         Secret.stringValue = defaults.string(forKey: "Secret") ?? "secret"
         topic.stringValue = randomString(length: 12)
         
-        ws.event.open = {
-            print("opened")
-            //send("test")
-        }
-        ws.event.close = { code, reason, clean in
-            print("close")
-        }
-        ws.event.error = { error in
-            print("error \(error)")
-        }
+        if (defaults.bool(forKey: "auto-subscribe")) { autoSubscribe.state = .on}
+          else { autoSubscribe.state = .off }
+        if (defaults.bool(forKey: "osirix")) { osirix.state = .on}
+          else { osirix.state = .off }
 
+        ws.event.open = { self.log(msg: "websocket opened") }
+        ws.event.close = { code, reason, clean in self.log(msg: "websocket close") }
+        ws.event.error = { error in self.log(msg: "websocket error \(error)") }
+        ws.event.message = { message in
+            if let text = message as? String { self.log(msg: "recv: \(text)") }
+        }
     }
     
     @IBAction func saveSettingsClick(_ sender: Any) {
@@ -140,6 +150,10 @@ class ViewController: NSViewController {
         defaults.set(hubURL.stringValue, forKey: "hubURL")
         defaults.set(Secret.stringValue, forKey: "Secret")
         
+        if (autoSubscribe.state == .on)   { defaults.set(true, forKey: "auto-subscribe") }
+          else { defaults.set(false, forKey: "auto-subscribe") }
+        if (osirix.state == .on)   { defaults.set(true, forKey: "osirix") }
+          else { defaults.set(false, forKey: "osirix") }
     }
     
     func randomString(length: Int) -> String {
@@ -152,7 +166,6 @@ class ViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
-
 
 }
 
