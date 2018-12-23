@@ -126,8 +126,45 @@ class ViewController: NSViewController {
         ws.event.close = { code, reason, clean in self.log(msg: "websocket close") }
         ws.event.error = { error in self.log(msg: "websocket error \(error)") }
         ws.event.message = { message in
-            if let text = message as? String { self.log(msg: "recv: \(text)") }
+            if let text = message as? String {
+                self.log(msg: "recv: \(text)")
+                self.launchOsirix(command: "DisplayStudy", studyUID: "1.2.840.113619.2.1.2.139348932.602501178")
+            }
         }
+    }
+    
+    func launchOsirix( command:String, studyUID: String) {
+        let osirixURL = URL(string: "http://localhost:8080/")!
+        let session = URLSession.shared
+        var request = URLRequest(url: osirixURL)
+        request.setValue("text/xml", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        let postString  = """
+<?xml version="1.0"?>
+<methodCall>
+<methodName>\(command)</methodName>
+<params><param><value><struct><member>
+<name>studyInstanceUID</name>
+<value>
+<string>\(studyUID)</string>
+</value>
+</member></struct></value></param></params>
+</methodCall>
+"""
+        print(postString)
+        request.httpBody = postString.data(using: .utf8)
+        let task = session.dataTask(with: request as URLRequest, completionHandler:
+        {
+            data, response, error in guard let data = data, error == nil else
+            {
+                print("error = \(String(describing: error))")
+                return
+            }
+            print("response = \(String(describing: response))")
+            print("data = \(String(describing: data))")
+        }
+        )
+        task.resume()
     }
     
     @IBAction func saveSettingsClick(_ sender: Any) {
