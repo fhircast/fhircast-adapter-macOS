@@ -24,8 +24,7 @@ class ViewController: NSViewController {
     
     @IBAction func shutdownClick(_ sender: Any) { NSApplication.shared.terminate(self) }
     
-    @IBAction func DeleteClick(_ sender: Any) {
-    }
+    @IBAction func DeleteClick(_ sender: Any) { logTextView.string = "" }
     
     @IBOutlet weak var autoSubscribe: NSButton!
     @IBOutlet weak var osirix: NSButton!
@@ -127,13 +126,83 @@ class ViewController: NSViewController {
         ws.event.error = { error in self.log(msg: "websocket error \(error)") }
         ws.event.message = { message in
             if let text = message as? String {
-                self.log(msg: "recv: \(text)")
-                self.launchOsirix(command: "DisplayStudy", studyUID: "1.2.840.113619.2.1.2.139348932.602501178")
+                if text.range(of:"bound") != nil {
+                    self.log(msg: "websocket acknowleged by hub.")
+                }
+                else {
+                    self.log(msg: "recv: \(text)")
+                    self.handleEvent(msg: text)
+                }
+                //self.launchOsirix(command: "DisplayStudy", studyUID: "1.2.840.113619.2.1.2.139348932.602501178")
             }
+        }
+        
+        if (autoSubscribe.state == .on) { subscribe(mode: "subscribe") }
+    }
+    
+    func handleEvent(msg: String) {
+        
+        struct fhircast: Codable {
+            var timestamp: String
+            var id: String
+            var eventDescription: eventStructure
+            enum CodingKeys: String, CodingKey {
+                case timestamp
+                case id
+                case eventDescription = "event"
+            }
+        }
+        struct eventStructure: Codable {
+            var hubEvent: String
+            var hubTopic: String
+            var context: [contextStructure]
+            enum CodingKeys:  String, CodingKey {
+                case hubEvent = "hub.event"
+                case hubTopic = "hub.topic"
+                case context
+            }
+        }
+        struct contextStructure: Codable {
+            var key: String
+            var resource: resourceStructure
+        }
+        struct resourceStructure: Codable {
+            var id: String
+            var resourceType: String
+            var identifier: [identifierStructure]
+            
+        }
+        struct identifierStructure: Codable {
+            var system: String
+            var value: String
+        }
+ 
+        let jsonData = msg.data(using: .utf8)!
+        let decoder = JSONDecoder()
+        let fhicastEvent = try! decoder.decode(fhircast.self, from: jsonData)
+        
+        
+        let eventName = fhicastEvent.eventDescription.hubEvent
+        var accessionNumber = ""
+        for context in fhicastEvent.eventDescription.context  {
+            if (context.key == "study"){
+                accessionNumber=context.resource.identifier[0].value
+            }
+        }
+        log(msg:"Received event: \(eventName) with accession number: \(accessionNumber)")
+        if osirix.state == .on {
+            log(msg:"Launching Osirix")
+            if eventName == "open-imaging-study" {
+                launchOsirix(command: "DisplayStudy", parameter: "accessionNumber", value: accessionNumber)
+            }
+            else {
+                launchOsirix(command: "CloseAllWindows", parameter: "", value: "")
+            }
+            
         }
     }
     
-    func launchOsirix( command:String, studyUID: String) {
+    func launchOsirix( command:String, parameter: String,  value: String) {
         let osirixURL = URL(string: "http://localhost:8080/")!
         let session = URLSession.shared
         var request = URLRequest(url: osirixURL)
@@ -144,9 +213,9 @@ class ViewController: NSViewController {
 <methodCall>
 <methodName>\(command)</methodName>
 <params><param><value><struct><member>
-<name>studyInstanceUID</name>
+<name>\(parameter)</name>
 <value>
-<string>\(studyUID)</string>
+<string>\(value)</string>
 </value>
 </member></struct></value></param></params>
 </methodCall>
