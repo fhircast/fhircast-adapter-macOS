@@ -191,14 +191,14 @@ class ViewController: NSViewController {
         }
         log(msg:"Received event: \(eventName) with accession number: \(accessionNumber)")
         if osirix.state == .on {
-            log(msg:"Launching Osirix")
             if eventName == "open-imaging-study" {
+                log(msg:"Launching study in Osirix")
                 launchOsirix(command: "DisplayStudy", parameter: "accessionNumber", value: accessionNumber)
             }
             else {
+                log(msg:"Closing study in Osirix")
                 launchOsirix(command: "CloseAllWindows", parameter: "", value: "")
             }
-            
         }
     }
     
